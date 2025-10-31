@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contec Set Visualizer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: "Barlow Condensed", sans-serif;
+      letter-spacing: 0.5px;
+      background: #0a0a0a;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 2vw;
+      padding: 2vh 0;
+      width: 100%;
+      position: relative;
+    }
+
+    .contact-btn {
+      position: absolute;
+      right: 3vw;
+      background: #00a2ff;
+      border: none;
+      color: #fff;
+      padding: 1.2vh 2.5vw;
+      border-radius: 0.6vw;
+      font-size: clamp(1rem, 1.3vw + 0.4vh, 1.8rem);
+      font-family: "Barlow Condensed", sans-serif;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .contact-btn:hover {
+      background: #0080cc;
+      box-shadow: 0 0 15px #00a2ff66;
+      transform: translateY(-2px);
+    }
+
+    header img {
+      height: 12vh;
+      margin-top: -0.5vh;
+    }
+
+    header h1 {
+      font-weight: 700;
+      font-size: clamp(1.5rem, 3vw + 0.5vh, 4rem);
+      color: #00a2ff;
+      text-transform: uppercase;
+      margin: 0;
+    }
+
+    main {
+      display: flex;
+      width: 95vw;
+      height: 80vh;
+      background: #0f0f0f;
+      border-radius: 1.5vw;
+      box-shadow: 0 0 40px rgba(0, 162, 255, 0.25);
+      overflow: hidden;
+      margin-top: 1vh;
+    }
+
+    .stage-wrapper {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .info-panel {
+      width: 28%;
+      background: rgba(17, 17, 17, 0.95);
+      padding: 2vw;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border-right: 2px solid #00a2ff33;
+      overflow: hidden;
+    }
+
+    .info-panel-content {
+      margin-top: -4vh;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding-right: 1vw;
+      flex: 1;
+      min-height: 0;
+    }
+
+    .info-panel-content::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .info-panel-content::-webkit-scrollbar-track {
+      background: rgba(0, 162, 255, 0.1);
+      border-radius: 4px;
+    }
+
+    .info-panel-content::-webkit-scrollbar-thumb {
+      background: #00a2ff;
+      border-radius: 4px;
+    }
+
+    .info-panel-content::-webkit-scrollbar-thumb:hover {
+      background: #0080cc;
+    }
+
+    .info-panel h2 {
+      color: #00a2ff;
+      font-size: clamp(1.6rem, 2.3vw + 0.4vh, 3.2rem);
+      margin-bottom: 1vh;
+      letter-spacing: 0.5px;
+    }
+
+    .info-panel p {
+      font-size: clamp(1rem, 1vw + 0.3vh, 1.3rem);
+      color: #ccc;
+      margin-bottom: 2vh;
+      line-height: 1.5;
+    }
+
+    .features {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .features li {
+      margin-bottom: 1.5vh;
+    }
+
+    .features strong {
+      color: #00a2ff;
+      font-size: clamp(1.1rem, 1.2vw + 0.4vh, 1.6rem);
+      display: block;
+      margin-bottom: 0.3vh;
+      letter-spacing: 0.3px;
+    }
+
+    .features span {
+      color: #aaa;
+      font-size: clamp(0.95rem, 0.9vw + 0.3vh, 1.2rem);
+      white-space: pre-line;
+      display: block;
+      margin-left: 0.5vw;
+      line-height: 1.4;
+    }
+
+    .price {
+      font-size: clamp(1.4rem, 1.8vw + 0.5vh, 2.4rem);
+      color: #00a2ff;
+      font-weight: 700;
+      text-align: center;
+      margin-top: 1vh;
+      border-top: 1px solid #00a2ff33;
+      padding-top: 1.2vh;
+      align-self: center;
+      letter-spacing: 0.5px;
+    }
+
+    .stage-area {
+      flex: 1;
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    .stage-area::before {
+      content: "";
+      position: absolute;
+      top: 0; 
+      left: 0; 
+      right: 0; 
+      bottom: 0;
+      background: url('images/stage.png') center center / cover no-repeat;
+      z-index: 0;
+      filter: brightness(0.7) blur(0px);
+      background-size: cover;
+      background-position: center calc(50% - 2vh);
+      transition: background-position 0.6s ease, filter 0.6s ease;
+    }
+
+    @media (max-width: 900px) {
+      .stage-area::before {
+        background-position: center calc(50% - 1vh);
+        filter: brightness(0.75);
+      }
+    }
+
+    @media (max-width: 600px) {
+      .stage-area::before {
+        background-position: center calc(50% - 0.5vh);
+        filter: brightness(0.8);
+      }
+    }
+
+    .stage-image {
+      object-fit: contain;
+      display: block;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 100%;
+      height: 100%;
+      max-width: none;
+      max-height: none;
+      opacity: 0;
+      transition: opacity 0.8s ease, transform 0.8s ease;
+      pointer-events: none;
+      filter: blur(6px);
+      z-index: 2;
+    }
+
+    #img-XS, #img-S {
+      width: 90%;
+      height: 90%;
+      top: 50%;
+    }
+
+    .visible {
+      opacity: 1;
+      transform: translate(-50%, -50%);
+      filter: blur(0);
+      z-index: 2;
+    }
+
+    .controls {
+      display: flex;
+      gap: 1.5vw;
+      justify-content: center;
+      align-items: center;
+      padding: 2vh 0;
+      border-top: 1px solid #00a2ff33;
+      position: relative;
+    }
+
+    .controls button {
+      background: #00a2ff;
+      border: none;
+      color: #fff;
+      padding: 1.5vh 3vw;
+      border-radius: 0.6vw;
+      font-size: clamp(1.2rem, 1.8vw + 0.5vh, 2.5rem);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .controls button:hover {
+      background: #0080cc;
+      box-shadow: 0 0 15px #00a2ff66;
+      transform: translateY(-2px);
+    }
+
+    .controls button.active {
+      color: #000;
+    }
+
+    .info-btn-wrapper {
+      position: absolute;
+      right: 2vw;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .info-btn {
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 4vh;
+      height: 4vh;
+      min-width: 40px;
+      min-height: 40px;
+      aspect-ratio: 1 / 1;
+      transition: all 0.3s ease;
+    }
+
+    .info-btn img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+
+    .info-btn:hover img {
+      filter: brightness(1.2);
+      transform: scale(1.05);
+    }
+
+    .info-tooltip {
+      position: absolute;
+      bottom: calc(100% + 5px);
+      right: -5px;
+      background: #000;
+      color: #fff;
+      padding: 1vh 1.5vw;
+      border-radius: 0.6vw;
+      font-size: clamp(0.9rem, 1vw + 0.3vh, 1.2rem);
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      z-index: 10;
+      border: 1px solid #00a2ff;
+    }
+
+    .info-tooltip.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .info-tooltip a {
+      color: #00a2ff;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .info-tooltip a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="images/CT_Logo_Transparent_Querformat(1).svg" alt="Contec Logo" />
+    <h1>Set Visualizer</h1>
+    <a href="https://www.contec-eventtechnik.de/buchen" 
+       class="contact-btn" 
+       target="_blank"
+       rel="noopener noreferrer">Jetzt Buchen</a>
+  </header>
+
+  <main>
+    <div class="info-panel" id="info">
+      <div class="info-panel-content">
+        <h2 id="set-name">Set M</h2>
+        <p id="set-description">Paket M liefert kraftvollen Sound und beeindruckende Lichttechnik für mittelgroße Events – zuverlässig, vielseitig und stimmungsvoll.</p>
+        <ul class="features" id="set-features">
+          <li><strong>Soundsystem M</strong><span>2 Hauptlautsprecher + 1 Subwoofer
+- 2x RCF Art 912A
+- professioneller Aktivlautsprecher mit neuster Technik
+- 130 dB Schalldruck
+- 1x RCF Sub 8003 MK3
+- 18 Zoll Subwoofer, 2200 W Leistung, 135 dB Schalldruck</span></li>
+          <li><strong>Lichtsystem M</strong><span>2 beleuchtete Traversentower
+- 2x große Hybrid Movingheads (Eurolite TMH H90)
+- 2x LED Bar
+- 2x LED Fluter/Stroboskop</span></li>
+        </ul>
+      </div>
+      <div class="price" id="set-price">Preis: 300 €</div>
+    </div>
+
+    <div class="stage-wrapper">
+      <div class="stage-area">
+        <img src="images/PXS.png" id="img-XS" class="stage-image" alt="Set XS">
+        <img src="images/PS (2).png" id="img-S" class="stage-image" alt="Set S">
+        <img src="images/PM.png" id="img-M" class="stage-image visible" alt="Set M">
+        <img src="images/PL(2).png" id="img-L" class="stage-image" alt="Set L">
+      </div>
+
+      <div class="controls">
+        <button onclick="setStage('XS')" data-set="XS">XS</button>
+        <button onclick="setStage('S')" data-set="S">S</button>
+        <button onclick="setStage('M')" data-set="M" class="active">M</button>
+        <button onclick="setStage('L')" data-set="L">L</button>
+
+        <!-- Info-Bild als klickbares Bild -->
+        <div class="info-btn-wrapper" onmouseenter="showTooltip()" onmouseleave="hideTooltip()">
+          <img src="images/image.psd(1).png" alt="Info" class="info-btn" onclick="openPDF()">
+          <div class="info-tooltip" id="tooltip">
+            Für den vollen Umfang an Informationen schauen sie sich den kompletten 
+            <a href="images/Mietkatalog ConTec Eventtechnik.pdf" target="_blank" rel="noopener noreferrer">Mietkatalog</a> an.
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const sets = {
+      XS: { image: "img-XS", description: 'Das Paket XS bietet kompakte Licht- und Tontechnik für kleine Feiern, dank Akkubetrieb auch völlig unabhängig vom Stromnetz.', features: [ { title: 'Soundsystem XS', desc: '1 akkubetriebener Hauptlautsprecher\n- bis zu 126 dB Schalldruck\n- bis zu 40h Akkulaufzeit bei mittlerer Lautstärke\n- bis zu 5h Akkulaufzeit bei voller Lautstärke' }, { title: 'Lichtsystem XS', desc: 'Lichtstativ mit 4 LED-Strahlern\n- 4x Ape Labs Maxi V2\n- akkubetriebene Scheinwerfer mit hoher Helligkeit' } ], price: '100 €' },
+      S:  { image: "img-S", description: 'Mit dem Paket S erhältst du solide Soundqualität und stimmungsvolle Lichteffekte. Ideal für Geburtstage oder kleine Partys.', features: [ { title: 'Soundsystem S', desc: '1 Hauptlautsprecher + 1 Subwoofer\n- CF Art 315A in Soundboks Optik mit bis zu 128 dB Schalldruck\n- aktiver 18 Zoll Subwoofer mit bis zu 131 dB Schalldruck' }, { title: 'Lichtsystem S', desc: '1 beleuchteter Traversentower\n- 2x kleine Movingheads (Purelight Muvy SpotOne)\n- 1x LED Bar\n- 1x LED Fluter/Stroboskop' } ], price: '180 €' },
+      M:  { image: "img-M", description: 'Paket M liefert kraftvollen Sound und beeindruckende Lichttechnik für mittelgroße Events – zuverlässig, vielseitig und stimmungsvoll.', features: [ { title: 'Soundsystem M', desc: '2 Hauptlautsprecher + 1 Subwoofer\n- 2x RCF Art 912A\n- professioneller Aktivlautsprecher mit neuster Technik\n- 130 dB Schalldruck\n- 1x RCF Sub 8003 MK3\n- 18 Zoll Subwoofer, 2200 W Leistung, 135 dB Schalldruck' }, { title: 'Lichtsystem M', desc: '2 beleuchtete Traversentower\n- 2x große Hybrid Movingheads (Eurolite TMH H90)\n- 2x LED Bar\n- 2x LED Fluter/Stroboskop' } ], price: '300 €' },
+      L:  { image: "img-L", description: 'Unser größtes Paket L kombiniert leistungsstarke Technik mit spektakulären Lichteffekten für unvergessliche Events.', features: [ { title: 'Soundsystem L', desc: '2 Hauptlautsprecher + 2 Subwoofer\n- 2x RCF Art 912A\n- 2x RCF Sub 8003 MK3\n- 2200 W Leistung, 135 dB Schalldruck' }, { title: 'Lichtsystem L', desc: '2 beleuchtete Traversentower & Hexagon\n- 4x große Hybrid Movingheads (Eurolite TMH H90)\n- 2x LED Bar\n- 2x LED Fluter/Stroboskop\n- LED-Hexagon bestehend aus 6 LED-Bars' } ], price: '430 €' }
+    };
+
+    function setStage(size) {
+      const current = document.querySelector(".stage-image.visible");
+      const next = document.getElementById(sets[size].image);
+      if (current === next) return;
+      current.classList.remove("visible");
+      setTimeout(() => next.classList.add("visible"), 150);
+
+      document.getElementById("set-name").textContent = `Set ${size}`;
+      document.getElementById("set-description").textContent = sets[size].description;
+      document.getElementById("set-price").textContent = "Preis: " + sets[size].price;
+
+      const featuresList = document.getElementById("set-features");
+      featuresList.innerHTML = "";
+      sets[size].features.forEach(f => {
+        const li = document.createElement("li");
+        li.innerHTML = `<strong>${f.title}</strong><span>${f.desc}</span>`;
+        featuresList.appendChild(li);
+      });
+
+      document.querySelectorAll('.controls button').forEach(btn => btn.classList.remove('active'));
+      document.querySelector(`button[data-set="${size}"]`).classList.add('active');
+    }
+
+    const tooltip = document.getElementById('tooltip');
+
+    function showTooltip() {
+      tooltip.classList.add('show');
+    }
+
+    function hideTooltip() {
+      setTimeout(() => {
+        if (!tooltip.matches(':hover') && !document.querySelector('.info-btn-wrapper:hover')) {
+          tooltip.classList.remove('show');
+        }
+      }, 50);
+    }
+
+    function openPDF() {
+      window.open('images/Mietkatalog ConTec Eventtechnik.pdf', '_blank');
+    }
+  </script>
+</body>
+</html>
